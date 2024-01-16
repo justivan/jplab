@@ -13,3 +13,4 @@ jupyterlab-code-formatter
 black
 isort
 sqlacodegen
+GeoAlchemy2

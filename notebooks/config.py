@@ -1,6 +1,7 @@
-from typing import get_type_hints, Union
-import psycopg2
 import os
+from typing import Union, get_type_hints
+
+import psycopg2
 
 
 class AppConfigError(Exception):
@@ -56,7 +57,9 @@ class AppConfig:
                 self.__setattr__(field, value)
             except ValueError:
                 raise AppConfigError(
-                    'Unable to cast value of "{}" to type "{}" for "{}" field'.format(env[field], var_type, field)
+                    'Unable to cast value of "{}" to type "{}" for "{}" field'.format(
+                        env[field], var_type, field
+                    )
                 )
 
     def __repr__(self):
