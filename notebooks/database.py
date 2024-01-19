@@ -39,7 +39,12 @@ class Database:
             self.metadata,
             autoload_with=self.engine,
         )
-
+        self.reservations_booking = Table(
+            "reservations_booking",
+            self.metadata,
+            autoload_with=self.engine,
+        )
+        
     def get_hotel_mapping_as_df(self):
         return pd.read_sql(sql=select(self.mapping_hotel), con=self.engine.connect())
 

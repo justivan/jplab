@@ -144,6 +144,8 @@ class BookingDataEncoder(BaseEstimator, TransformerMixin):
             # Price Info
             X.loc[X["purchase_price"] < 1, "purchase_price"] = 0
             X.loc[X["sales_price"] < 1, "sales_price"] = 0
+            # X["operator_price"] = 0
+            # X["operator_price"] = X["operator_price"].astype("Int64")
 
             # Fill the rest of blank fields with 0 if numerical
             X = X.apply(lambda x: x.fillna(0) if x.dtype.kind in "biufc" else x)
@@ -179,7 +181,7 @@ class BookingDataEncoder(BaseEstimator, TransformerMixin):
             X["operator_id"] = pd.to_numeric(X["operator_id"], errors="coerce").astype(
                 "Int64"
             )
-
+            
             # Fill the rest of blank fields with None for database insertion
             X.replace({pd.NaT: None, pd.NA: None, np.NaN: None}, inplace=True)
 
@@ -190,6 +192,10 @@ class BookingDataEncoder(BaseEstimator, TransformerMixin):
                     "room_code",
                     "meal",
                     "main_season",
+                    "external_code_hotel",
+                    "external_code_meal",
+                    "external_code_room",
+                    "external_code_operator",
                 ],
                 axis=1,
                 inplace=True,
