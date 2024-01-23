@@ -106,6 +106,28 @@ class BookingDataEncoder(BaseEstimator, TransformerMixin):
         self.rooms = rooms
         self.meals = meals
         self.operators = operators
+        self.exclude = [
+            1,  # NO ACCOMMODATION
+            2,  # FLIGHT ONLY PAX
+            3,  # TOUR ONLY PAX
+            4,  # Transfer Only Pax
+            5,  # SPLIT BOOKINGS
+            5000,  # TEST
+            5005,  # TEST HOTEL
+            90001,  # HOTEL SHOP RESERVATIONS
+            191680,  # ROULETTE OFFER
+            202356,  # TEST HOTEL
+            203441,  # ROULETTE HOTEL RAK
+            209384,  # TEST HOTEL - BUGFIX - DO NOT ACCESS
+            100,  # HOTEL SHOP RESERVATIONS
+            90018,  # HOTEL SHOP RESERVATIONS
+            209385,  # TEST HOTEL - BUGFIX - DO NOT ACCESS
+            217636,  # TEST HOTEL
+            218648,  # CRUISE
+            218736,  # TEST HOTEL
+            219137,  # PP_NOACCOM
+            219138,  # PP_NOACCOM
+        ]
 
     def fit(self, X, y=None):
         return self
@@ -144,14 +166,13 @@ class BookingDataEncoder(BaseEstimator, TransformerMixin):
             # Price Info
             X.loc[X["purchase_price"] < 1, "purchase_price"] = 0
             X.loc[X["sales_price"] < 1, "sales_price"] = 0
-            # X["operator_price"] = 0
-            # X["operator_price"] = X["operator_price"].astype("Int64")
 
             # Fill the rest of blank fields with 0 if numerical
             X = X.apply(lambda x: x.fillna(0) if x.dtype.kind in "biufc" else x)
 
             # Hotel ID
             X["external_code_hotel"] = X["hotel_id"]
+            X.drop(X[X["external_code_hotel"].isin(self.exclude)].index, inplace=True)
             X["hotel_id"] = pd.to_numeric(
                 X["external_code_hotel"].map(self.hotels), errors="coerce"
             )

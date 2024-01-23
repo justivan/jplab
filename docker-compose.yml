@@ -7,6 +7,7 @@ services:
     volumes:
       - ./notebooks:/home/jovyan/work
     container_name: jupyterlab
+    restart: always
     env_file:
       - .env
     user: root
