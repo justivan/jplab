@@ -3,11 +3,10 @@ services:
   jupyterlab:
     build: .
     ports:
-      - 8888:8888
+      - 10000:8888
     volumes:
       - ./notebooks:/home/jovyan/work
     container_name: jupyterlab
-    restart: always
     env_file:
       - .env
     user: root

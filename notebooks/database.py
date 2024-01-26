@@ -5,46 +5,34 @@ from sqlalchemy.orm import Session
 
 
 class Database:
+    TABLES = [
+        "mapping_hotel",
+        "mapping_hotel_room",
+        "mapping_operator",
+        "clients_operator",
+        "accommodation_hotel_room",
+        "definitions_meal_plan",
+        "gwg_reservation",
+    ]
+
     def __init__(self):
         self.engine = create_engine(Config.DATABASE_URI)
         self.metadata = MetaData()
 
-        self.mapping_hotel = Table(
-            "mapping_hotel",
-            self.metadata,
-            autoload_with=self.engine,
-        )
-        self.mapping_hotel_room = Table(
-            "mapping_hotel_room",
-            self.metadata,
-            autoload_with=self.engine,
-        )
-        self.mapping_operator = Table(
-            "mapping_operator",
-            self.metadata,
-            autoload_with=self.engine,
-        )
-        self.clients_operator = Table(
-            "clients_operator",
-            self.metadata,
-            autoload_with=self.engine,
-        )
-        self.accommodation_hotel_room = Table(
-            "accommodation_hotel_room",
-            self.metadata,
-            autoload_with=self.engine,
-        )
-        self.definitions_meal_plan = Table(
-            "definitions_meal_plan",
-            self.metadata,
-            autoload_with=self.engine,
-        )
-        self.reservations_booking = Table(
-            "reservations_booking",
-            self.metadata,
-            autoload_with=self.engine,
-        )
-        
+        self.load_tables()
+
+    def load_tables(self):
+        for table_name in self.TABLES:
+            setattr(
+                self,
+                table_name,
+                Table(
+                    table_name,
+                    self.metadata,
+                    autoload_with=self.engine,
+                ),
+            )
+
     def get_hotel_mapping_as_df(self):
         return pd.read_sql(sql=select(self.mapping_hotel), con=self.engine.connect())
 
@@ -61,9 +49,14 @@ class Database:
         )
 
     def get_meal_mapping_as_df(self):
-        return pd.read_sql(
-            sql=select(self.definitions_meal_plan), con=self.engine.connect()
-        )
+        return pd.read_sql(sql=select(self.definitions_meal_plan), con=self.engine.connect())
 
     def get_operator_mapping_as_df(self):
         return pd.read_sql(sql=select(self.mapping_operator), con=self.engine.connect())
+
+    # def to_mapping_dict(self, df, key, value):
+    #     if isinstance(key, str):
+    #         return dict(zip(df[key], df[value]))
+    #     else:
+    #         key_tuples = df[key].apply(tuple, axis=1)
+    #         return dict(zip(key_tuples, df[value]))
