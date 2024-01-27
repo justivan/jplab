@@ -11,8 +11,13 @@ class Database:
         "mapping_operator",
         "clients_operator",
         "accommodation_hotel_room",
+        "accommodation_hotel",
+        "accommodation_purchase_manager",
         "definitions_meal_plan",
+        "definitions_area",
+        "definitions_region",
         "gwg_reservation",
+        "users_user",
     ]
 
     def __init__(self):

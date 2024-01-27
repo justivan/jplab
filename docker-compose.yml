@@ -3,10 +3,20 @@ services:
   jupyterlab:
     build: .
     ports:
-      - 10000:8888
+      - 8888:8888
     volumes:
       - ./notebooks:/home/jovyan/work
     container_name: jupyterlab
     env_file:
       - .env
     user: root
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
