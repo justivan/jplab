@@ -91,7 +91,7 @@ class BookingData:
         """
         logging.basicConfig(
             filename=BASE_DIR / "logs" / "get_booking_data.log",
-            level=logging.WARNING,
+            level=logging.INFO,
             format="%(asctime)s - %(levelname)s: %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
         )
@@ -109,6 +109,7 @@ class BookingData:
             data = response.content.decode("utf8")
 
             if len(data) > 424:
+                logging.info(f"Request to {self.ssrs_url} was successful.")
                 return data
             else:
                 logging.warning(

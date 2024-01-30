@@ -167,6 +167,11 @@ class BookingDataEncoder(BaseEstimator, TransformerMixin):
             X["room_code"] = X["room_code"].apply(
                 lambda x: "" if len(str(x)) > 3 else x
             )
+
+            # Meal Code
+            X["meal"] = X["meal"].apply(
+                lambda x: "" if len(str(x)) > 3 else x
+            )
             
             # Fill the rest of blank fields with None for database insertion
             X.replace({pd.NaT: None, pd.NA: None, np.NaN: None}, inplace=True)

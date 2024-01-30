@@ -12,7 +12,7 @@ RUN groupadd jovyan \
 
 # [Optional] Uncomment this section to install additional OS packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends libpq-dev binutils libproj-dev gdal-bin
+    && apt-get -y install --no-install-recommends libpq-dev binutils libproj-dev gdal-bin cron
 
 # [Optional] If your requirements rarely change, uncomment this section to add them to the image.
 COPY requirements.txt /tmp/pip-tmp/
