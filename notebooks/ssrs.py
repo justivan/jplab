@@ -41,9 +41,7 @@ class BookingData:
         Raises:
             ValueError: If the option is not between 1 and 3.
         """
-        self.ssrs_url = (
-            Config.SSRS_BASE_URL + destination + " Reports/Reservations/Bookings Data"
-        )
+        self.ssrs_url = Config.SSRS_BASE_URL + destination + " Reports/Reservations/Bookings Data"
         self.ssrs_usr = Config.SSRS_USERNAME
         self.ssrs_pwd = Config.SSRS_PASSWORD
 
@@ -112,9 +110,7 @@ class BookingData:
                 logging.info(f"Request to {self.ssrs_url} was successful.")
                 return data
             else:
-                logging.warning(
-                    f"No new data available for: {self.ssrs_url.split('?')[1]}"
-                )
+                logging.warning(f"No new data available for: {self.ssrs_url.split('?')[1]}")
         except requests.exceptions.HTTPError as e:
             logging.error(f"HTTP error occurred: {str(e)}")
             logging.exception("Full traceback:")
@@ -124,4 +120,32 @@ class BookingData:
             logging.exception("Full traceback:")
             raise  # re-raise the exception for the caller to handle if needed
 
+        return None
+
+
+class HotelData:
+    def __init__(self, destination):
+        self.ssrs_url = Config.SSRS_BASE_URL + destination + " Reports/Main Data/HotelList"
+        self.ssrs_usr = Config.SSRS_USERNAME
+        self.ssrs_pwd = Config.SSRS_PASSWORD
+        self.payload = [
+            ("Active", True),
+            ("rs:Command", "Render"),
+            ("rs:Format", "CSV"),
+            ("rc:ItemPath", "table1"),
+        ]
+
+        self.params = urllib.parse.urlencode(self.payload, quote_via=urllib.parse.quote)
+
+    def get(self):
+        response = requests.get(
+            self.ssrs_url,
+            params=self.params,
+            stream=True,
+            auth=HttpNtlmAuth(self.ssrs_usr, self.ssrs_pwd),
+        )
+
+        if response.status_code == 200:
+            data = response.content.decode("utf8")
+            return data
         return None
