@@ -46,7 +46,11 @@ class OperatorCost:
                         "operator_price": float,
                     },
                 )
-
+                df = (
+                    df.groupby(["bkg_ref", "operator_code"])["operator_price"]
+                    .sum()
+                    .reset_index(name="operator_price")
+                )
                 df.dropna(inplace=True)
                 df_set.append(df)
 

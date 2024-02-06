@@ -104,13 +104,13 @@ class BookingData:
 
             response.raise_for_status()
 
-            data = response.content.decode("utf8")
+            return response.content.decode("utf8")
 
-            if len(data) > 424:
-                logging.info(f"Request to {self.ssrs_url} was successful.")
-                return data
-            else:
-                logging.warning(f"No new data available for: {self.ssrs_url.split('?')[1]}")
+            #if len(data) > 424:
+            #    logging.info(f"Request to {self.ssrs_url} was successful.")
+            #    return data
+            #else:
+            #    logging.warning(f"No new data available for: {self.ssrs_url.split('?')[1]}")
         except requests.exceptions.HTTPError as e:
             logging.error(f"HTTP error occurred: {str(e)}")
             logging.exception("Full traceback:")
@@ -149,3 +149,6 @@ class HotelData:
             data = response.content.decode("utf8")
             return data
         return None
+
+
+

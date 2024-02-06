@@ -57,19 +57,19 @@ class BookingDataReadCsv(BaseEstimator, TransformerMixin):
                     "main_season",
                 ],
                 dtype={
-                    "ref_id": int,
-                    "resales_id": int,
-                    "hotel_id": int,
-                    "operator_id": int,
+                    "ref_id": pd.Int64Dtype(),
+                    "res_id": pd.Int64Dtype(),
+                    "hotel_id": pd.Int64Dtype(),
+                    "operator_id": pd.Int64Dtype(),
                     "operator_code": str,
                     "bkg_ref": str,
                     "guest_name": str,
                     "room_type": str,
                     "room_code": str,
                     "meal": str,
-                    "days": int,
-                    "adult": int,
-                    "child": int,
+                    "days": pd.Int64Dtype(),
+                    "adult": pd.Int64Dtype(),
+                    "child": pd.Int64Dtype(),
                     "purchase_price": float,
                     "purchase_currency": str,
                     "sales_price": float,
@@ -140,6 +140,9 @@ class BookingDataEncoder(BaseEstimator, TransformerMixin):
             for col in ["status", "status4", "status5"]:
                 X[col] = X[col].str.capitalize()
 
+            # Drop non-accommodation entries
+            X.drop(X[X["hotel_id"].isin(self.exclude)].index, inplace=True)
+
             # Cancellation Date
             # Convert "1900-01-01" to pd.NA
             X["cancellation_date"] = X["cancellation_date"].replace("1900-01-01", pd.NA)
@@ -174,6 +177,12 @@ class BookingDataEncoder(BaseEstimator, TransformerMixin):
 
             # Drop fields
             X.drop(["main_season"], axis=1, inplace=True)
+
+            # Drop if data is empty
+            X.drop(X[X["ref_id"] == 0].index, inplace=True)
+
+            # Drop duplicates
+            X.drop_duplicates(subset="ref_id", keep="last", inplace=True)
 
             return X
         return None
