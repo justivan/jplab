@@ -17,8 +17,8 @@ class EmailSender:
         self.to = to
         self.cc = cc
         self.subject = subject
-        
-    def send_email(self, outfile):
+
+    def send_email(self, outfile, body):
         # Create a multipart message and set headers
         message = MIMEMultipart("alternative")
         message["From"] = "noreply@meetingpointuae.com"
@@ -32,7 +32,7 @@ class EmailSender:
             Please do not reply.
         """
 
-        html_content = """
+        html_content = f"""
             <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
             <html xmlns="http://www.w3.org/1999/xhtml">
             <head>
@@ -47,15 +47,14 @@ class EmailSender:
             <table class="body" data-made-with-foundation>
                 <tr>
                 <td align="left" valign="top" style="margin: 0px; color: #17202A; text-align: left; font-family: arial; font-size: 14px;">
-                    <p>This is an automated report.</p>
-                    <p>Please do not reply.</p>          
+                    {body}         
                 </td>
                 </tr>
             </table>
             </body>
             </html>
         """
-        
+
         message.attach(MIMEText(html_content, "html"))
         message.attach(MIMEText(email_content, "plain"))
 

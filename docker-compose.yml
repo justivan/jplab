@@ -12,6 +12,7 @@ services:
     user: root
     networks:
       - network
+    restart: always
 
 networks:
   network:
