@@ -14,3 +14,4 @@ black
 isort
 sqlacodegen
 GeoAlchemy2
+geopandas
