@@ -173,7 +173,7 @@ class BookingDataEncoder(BaseEstimator, TransformerMixin):
             X["meal"] = X["meal"].apply(lambda x: "" if len(str(x)) > 3 else x)
 
             # Fill the rest of blank fields with None for database insertion
-            X.replace({pd.NaT: None, pd.NA: None, np.NaN: None}, inplace=True)
+            X.replace({"": None, pd.NaT: None, pd.NA: None, np.NaN: None}, inplace=True)
 
             # Drop fields
             X.drop(["main_season"], axis=1, inplace=True)
